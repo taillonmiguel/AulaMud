@@ -1,0 +1,49 @@
+@page "/todo"
+
+<PageTitle>Todo</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">
+    Itens a serem feitos: (@todos.Count(todo => !todo.EstaFeito))
+</MudText>
+
+<hr>
+
+<div class="mt-8">
+    <ul>
+        @foreach (var item in todos) {
+            <li>
+                <input type="checkbox" @bind="item.EstaFeito" />
+                @if (item.EstaFeito) {
+                    <span style="text-decoration:line-through;font-style: italic;color: gray;">
+                        @item.Titulo
+                    </span>
+                } else {
+                    <input @bind="item.Titulo" />
+                }
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="mt-8">
+    <MudTextField @bind-Value="novoItem" Label="Adicionar Item" Variant="Variant.Text"></MudTextField>
+    <br>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Adicionar">Adicionar item</MudButton>
+</div>
+
+@code {
+    private List<TodoItem> todos = new();
+    private string? novoItem;
+
+    private void Adicionar() {
+        if (!string.IsNullOrEmpty(novoItem)) {
+            var todo = new TodoItem{
+                Titulo = novoItem
+            };
+
+            todos.Add(todo);
+            novoItem = string.Empty;
+        }
+    }
+}
+
